@@ -20,3 +20,4 @@ Route::get('/settings/password', 'UserController@getChangePassword')->name('user
 Route::post('/settings/password/update', 'UserController@changePassword')->name('user.changePassword');
 Route::get('/{username}', 'ProfileController@showProfile')->name('user.profile');
 Route::post('/{username}/update-avatar', 'ProfileController@updateAvatar')->name('user.updateAvatar');
+Route::post('follow', 'HomeController@followUserRequest')->name('user.follow');

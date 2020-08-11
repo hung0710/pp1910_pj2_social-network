@@ -31,7 +31,7 @@ class UserService
     /**
      * Update user in database.
      *
-     * @param Int $id
+     * @param int $id
      * @param Array $data['name', 'birthday', 'gender', 'address']
      * @return Boolean
      */

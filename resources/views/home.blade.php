@@ -95,7 +95,7 @@
                                             <label for="upload-image" class="display-inline">
                                                 <i class="fa fa-camera text-muted"></i>
                                             </label>
-                                            <input class="input-image form-control @error('image') is-invalid @enderror" type="file" id="upload-image" name="image[]" accept="image/*" multiple>
+                                            <input class="input-image form-control @error('image') is-invalid @enderror" type="file" id="upload-image" style="display: none" name="image[]" accept="image/*" multiple>
                                         </a>
                                     </li>
                                 </ul>
@@ -157,55 +157,27 @@
                 <div class="col-lg-3">
                     <div class="suggestion-box full-width">
                         <div class="suggestions-list">
-                            <div class="suggestion-body">
-                                <img class="img-responsive img-circle" src="assets/img/users/17.jpeg" alt="Image">
-                                <div class="name-box">
-                                    <h4>Anthony McCartney</h4>
-                                    <span>@antony</span>
+                            @foreach($users as $user)
+                                <div class="suggestion-body">
+                                    <img class="img-responsive img-circle" src="{{ getAvatar($user->avatar) }}" alt="Image">
+                                    <div class="name-box">
+                                        <h4>{{ $user->name }}</h4>
+                                        <span>{{ '@'.$user->username }}</span>
+                                    </div>
+                                    <span>
+                                        <button class="btn btn-info btn-sm action-follow" data-id="{{ $user->id }}">
+                                            <strong>
+                                                @if(auth()->user()->isFollowing($user))
+                                                    {{ __('UnFollow') }}
+                                                @else
+                                                    {{ __('Follow') }}
+                                                @endif
+                                            </strong>
+                                        </button>
+                                    </span>
                                 </div>
-                                <span><i class="fa fa-plus"></i></span>
-                            </div>
-                            <div class="suggestion-body">
-                                <img class="img-responsive img-circle" src="assets/img/users/16.jpg" alt="Image">
-                                <div class="name-box">
-                                    <h4>Sean Coleman</h4>
-                                    <span>@sean</span>
-                                </div>
-                                <span><i class="fa fa-plus"></i></span>
-                            </div>
-                            <div class="suggestion-body">
-                                <img class="img-responsive img-circle" src="assets/img/users/14.jpg" alt="Image">
-                                <div class="name-box">
-                                    <h4>Francis Long</h4>
-                                    <span>@francis</span>
-                                </div>
-                                <span><i class="fa fa-plus"></i></span>
-                            </div>
-                            <div class="suggestion-body">
-                                <img class="img-responsive img-circle" src="assets/img/users/11.jpg" alt="Image">
-                                <div class="name-box">
-                                    <h4>Vanessa Wells</h4>
-                                    <span>@vannessa</span>
-                                </div>
-                                <span><i class="fa fa-plus"></i></span>
-                            </div>
-                            <div class="suggestion-body">
-                                <img class="img-responsive img-circle" src="assets/img/users/9.jpg" alt="Image">
-                                <div class="name-box">
-                                    <h4>Anna Morgan</h4>
-                                    <span>@anna</span>
-                                </div>
-                                <span><i class="fa fa-plus"></i></span>
-                            </div>
-                            <div class="suggestion-body">
-                                <img class="img-responsive img-circle" src="assets/img/users/8.jpg" alt="Image">
-                                <div class="name-box">
-                                    <h4>Clifford Graham</h4>
-                                    <span>@clifford</span>
-                                </div>
-                                <span><i class="fa fa-plus"></i></span>
-                            </div>
-                        </div><!--suggestions-list end-->
+                            @endforeach
+                        </div>
                     </div>
 
                     <div class="trending-box">
@@ -338,33 +310,59 @@
 @endsection
 @section('script')
 <script language="javascript" type="text/javascript">
-    $(function () {
-        $("#upload-image").change(function () {
-            if (typeof (FileReader) != "undefined") {
-                var dvPreview = $("#dvPreview");
-                dvPreview.html("");
-                var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.jpg|.jpeg|.gif|.png|.bmp)$/;
-                $($(this)[0].files).each(function () {
-                    var file = $(this);
-                    if (regex.test(file[0].name.toLowerCase())) {
-                        var reader = new FileReader();
-                        reader.onload = function (e) {
-                            var img = $("<img />");
-                            img.attr("style", "height:100px;width: 100px");
-                            img.attr("src", e.target.result);
-                            dvPreview.append(img);
+    $(document).ready(function() {
+        $(function () {
+            $("#upload-image").change(function () {
+                if (typeof (FileReader) != "undefined") {
+                    var dvPreview = $("#dvPreview");
+                    dvPreview.html("");
+                    var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.jpg|.jpeg|.gif|.png|.bmp)$/;
+                    $($(this)[0].files).each(function () {
+                        var file = $(this);
+                        if (regex.test(file[0].name.toLowerCase())) {
+                            var reader = new FileReader();
+                            reader.onload = function (e) {
+                                var img = $("<img />");
+                                img.attr("style", "height:100px;width: 100px");
+                                img.attr("src", e.target.result);
+                                dvPreview.append(img);
+                            }
+                            reader.readAsDataURL(file[0]);
+                        } else {
+                            alert(file[0].name + " is not a valid image file.");
+                            dvPreview.html("");
+                            return false;
                         }
-                        reader.readAsDataURL(file[0]);
-                    } else {
-                        alert(file[0].name + " is not a valid image file.");
-                        dvPreview.html("");
-                        return false;
-                    }
-                });
-            } else {
-                alert("This browser does not support HTML5 FileReader.");
+                    });
+                } else {
+                    alert("This browser does not support HTML5 FileReader.");
+                }
+            });
+        });
+
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
+
+        $('.action-follow').click(function(){
+            var user_id = $(this).data('id');
+            var cObj = $(this);
+
+            $.ajax({
+                type:'POST',
+                url:'/follow',
+                data:{ user_id: user_id },
+                success: function (data) {
+                    if (jQuery.isEmptyObject (data.success.attached)) {
+                        cObj.find("strong").text("Follow");
+                    } else{
+                        cObj.find("strong").text("UnFollow");
+                    }
+                }
+            });
+        });
     });
-    </script>
+</script>
 @endsection

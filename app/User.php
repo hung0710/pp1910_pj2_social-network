@@ -9,10 +9,11 @@ use App\Models\React;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Overtrue\LaravelFollow\Followable;
 
 class User extends Authenticatable
 {
-    use Notifiable;
+    use Notifiable, Followable;
 
     /**
      * The attributes that are mass assignable.
@@ -89,5 +90,16 @@ class User extends Authenticatable
     public function scopeIsFemale()
     {
         return $this->gender == config('user.gender.female');
+    }
+
+    /**
+     * Scope verified user.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Http\Response
+     */
+    public function scopeIsVerified($query)
+    {
+        return $query->whereNotNull('email_verified_at');
     }
 }
