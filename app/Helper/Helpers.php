@@ -30,3 +30,10 @@ if (!function_exists('getAvatar')) {
         return $imagePath;
     }
 }
+
+if (!function_exists('getCreatedFromTime')) {
+    function getCreatedFromTime($post)
+    {
+        return Carbon::createFromTimeStamp(strtotime($post->created_at))->diffForHumans();
+    }
+}
