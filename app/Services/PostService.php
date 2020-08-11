@@ -30,7 +30,7 @@ class PostService
         $imageArray = [];
         foreach ($images as $image) {
             $fileName = time() . '_' . $image->getClientOriginalName();
-            $image->move('/posts', $fileName, 'post_images');
+            $image->storeAs('/posts', $fileName, 'post_images');
             $imageArray[] = $fileName;
         }
         $imageString = json_encode($imageArray);
@@ -57,5 +57,19 @@ class PostService
         }
         
         return true;
+    }
+
+    /**
+     * Get list post
+     *
+     * @param App\User $user
+     * @return \Illuminate\Http\Response
+     */
+    public function getListPost($user)
+    {
+        $userIds = $user->followings()->pluck('follower_id');
+        $userIds[] = $user->id;
+
+        return Post::with('user')->whereIn('user_id', $userIds)->OrderBy('created_at', 'desc')->get();
     }
 }

@@ -2,23 +2,25 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\PostService;
 use App\Services\UserService;
 use App\User;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
-    protected $userService;
+    protected $userService, $postService;
 
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct(UserService $userService)
+    public function __construct(UserService $userService, PostService $postService)
     {
         $this->middleware('auth');
         $this->userService = $userService;
+        $this->postService = $postService;
     }
 
     /**
@@ -29,8 +31,9 @@ class HomeController extends Controller
     public function index()
     {
         $users = User::where('id', '!=', auth()->user()->id)->get();
+        $posts = $this->postService->getListPost(auth()->user());
 
-        return view('home', compact('users'));
+        return view('home', compact('users', 'posts'));
     }
 
     /**
