@@ -9,7 +9,6 @@
     
     <link rel="icon" href="{{ asset('assets/img/logo.jpg') }}">
     <link type="text/css" href="{{ asset('assets/css/demos/photo.css') }}" rel="stylesheet" />
-    <script src="{{ asset('assets/js/modernizr-custom.js') }}"></script>
 </head>
 <body>
      @include('layouts.header')
@@ -20,6 +19,8 @@
 	<script src="{{ asset('assets/js/bootstrap.min.js') }}"></script>
 	<script src="{{ asset('assets/js/base.js') }}"></script>
 	<script src="{{ asset('assets/plugins/slimscroll/jquery.slimscroll.js') }}"></script>
+    <script src="{{ asset('js/customs.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 	<script>
 		$('#Slim,#Slim2').slimScroll({
 				height:"auto",
@@ -27,7 +28,23 @@
 				railVisible: true,
 				alwaysVisible: true,
 				size:"8px",
-			});		
+			});
+        function errorMessage() {
+            Swal.fire({
+                icon: 'error',
+                title: "@lang('Oops...')",
+                text: "@lang('Something went wrong!')",
+            });
+
+            location.reload();
+        }
+
+        function errorEmptyContent() {
+            Swal.fire({
+                icon: 'question',
+                text: "@lang('Content can\'t be empty!')",
+            });
+        }
 	</script>
 	@yield('script')
   </body>

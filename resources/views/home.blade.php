@@ -173,52 +173,8 @@
                                                         <span>{{ $post->title }}</span>
                                                     </div>
 
-                                                    <ul class="img-comment-list">
-                                                        <li>
-                                                            <div class="comment-img">
-                                                                <img src="assets/img/users/17.jpeg" class="img-responsive img-circle" alt="Image"/>
-                                                            </div>
-                                                            <div class="comment-text">
-                                                                <strong><a href="">Anthony McCartney</a></strong>
-                                                                <p>Hello this is a test comment.</p> <span class="date sub-text">on December 5th, 2016</span>
-                                                            </div>
-                                                        </li>
-                                                        <li>
-                                                            <div class="comment-img">
-                                                                <img src="assets/img/users/15.jpg" class="img-responsive img-circle" alt="Image"/>
-                                                            </div>
-                                                            <div class="comment-text">
-                                                                <strong><a href="">Vanessa Wells</a></strong>
-                                                                <p>Hello this is a test comment and this comment is particularly very long and it goes on and on and on.</p> <span>on December 5th, 2016</span>
-                                                            </div>
-                                                        </li>
-                                                        <li>
-                                                            <div class="comment-img">
-                                                                <img src="assets/img/users/14.jpg" class="img-responsive img-circle" alt="Image"/>
-                                                            </div>
-                                                            <div class="comment-text">
-                                                                <strong><a href="">Sean Coleman</a></strong>
-                                                                <p class="">Hello this is a test comment.</p> <span class="date sub-text">on December 5th, 2016</span>
-                                                            </div>
-                                                        </li>
-                                                        <li>
-                                                            <div class="comment-img">
-                                                                <img src="assets/img/users/13.jpeg" class="img-responsive img-circle" alt="Image"/>
-                                                            </div>
-                                                            <div class="comment-text">
-                                                                <strong><a href="">Anna Morgan</a></strong>
-                                                                <p class="">Hello this is a test comment.</p> <span class="date sub-text">on December 5th, 2016</span>
-                                                            </div>
-                                                        </li>
-                                                        <li>
-                                                            <div class="comment-img">
-                                                                <img src="assets/img/users/3.jpg" class="img-responsive img-circle" alt="Image"/>
-                                                            </div>
-                                                            <div class="comment-text">
-                                                                <strong><a href="">Allison Fowler</a></strong>
-                                                                <p class="">Hello this is a test comment.</p> <span class="date sub-text">on December 5th, 2016</span>
-                                                            </div>
-                                                        </li>
+                                                    <ul class="img-comment-list comment-list">
+                                                        @include('block.comment')
                                                     </ul>
                                                     <div class="modal-meta-bottom">
                                                         <ul>
@@ -227,12 +183,15 @@
                                                                 <a class="modal-comment" href="#"><i class="fa fa-comments"></i></a><span> 786,286</span>
                                                             </li>
                                                             <li>
-                                            <span class="thumb-xs">
-                                                <img class="img-responsive img-circle" src="assets/img/users/13.jpeg" alt="Image">
-                                            </span>
-                                                                <div class="comment-body">
-                                                                    <input class="form-control input-sm" type="text" placeholder="Write your comment...">
-                                                                </div>
+                                                                <form class="display-none post-{{ $post->id }}">
+                                                                    <span class="thumb-xs">
+                                                                        <img class="img-responsive img-circle" src="{{ getAvatar(auth()->user()->avatar) }}" alt="{{ auth()->user()->name }}">
+                                                                    </span>
+                                                                    <div class="comment-body">
+                                                                        <input class="form-control input-sm comment-content" type="text" placeholder="Write your comment...">
+                                                                        <button class="btn btn-md-2 btn-primary store-comment" data-post_id="{{ $post->id }}">{{ __('Comment') }}</button>
+                                                                    </div>
+                                                                </form>
                                                             </li>
                                                         </ul>
                                                     </div>
@@ -308,62 +267,4 @@
             </div>
         </div>
     </section>
-@endsection
-@section('script')
-<script language="javascript" type="text/javascript">
-    $(document).ready(function() {
-        $(function () {
-            $("#upload-image").change(function () {
-                if (typeof (FileReader) != "undefined") {
-                    var dvPreview = $("#dvPreview");
-                    dvPreview.html("");
-                    var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.jpg|.jpeg|.gif|.png|.bmp)$/;
-                    $($(this)[0].files).each(function () {
-                        var file = $(this);
-                        if (regex.test(file[0].name.toLowerCase())) {
-                            var reader = new FileReader();
-                            reader.onload = function (e) {
-                                var img = $("<img />");
-                                img.attr("style", "height:100px;width: 100px");
-                                img.attr("src", e.target.result);
-                                dvPreview.append(img);
-                            }
-                            reader.readAsDataURL(file[0]);
-                        } else {
-                            alert(file[0].name + " is not a valid image file.");
-                            dvPreview.html("");
-                            return false;
-                        }
-                    });
-                } else {
-                    alert("This browser does not support HTML5 FileReader.");
-                }
-            });
-        });
-
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-
-        $('.action-follow').click(function(){
-            var user_id = $(this).data('id');
-            var cObj = $(this);
-
-            $.ajax({
-                type:'POST',
-                url:'/follow',
-                data:{ user_id: user_id },
-                success: function (data) {
-                    if (jQuery.isEmptyObject (data.success.attached)) {
-                        cObj.find("strong").text("Follow");
-                    } else{
-                        cObj.find("strong").text("UnFollow");
-                    }
-                }
-            });
-        });
-    });
-</script>
 @endsection

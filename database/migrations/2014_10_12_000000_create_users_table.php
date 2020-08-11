@@ -24,7 +24,7 @@ class CreateUsersTable extends Migration
             $table->string('address')->nullable();
             $table->string('avatar')->nullable();
             $table->string('cover')->nullable();
-            $table->bigInteger('language')->default(config('user.language.en'))->comment('1: en, 2: vi');
+            $table->bigInteger('language')->default(config('user.language.en'))->comment('1: en, 2: vi')->nullable();
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

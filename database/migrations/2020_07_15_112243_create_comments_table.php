@@ -17,7 +17,7 @@ class CreateCommentsTable extends Migration
             $table->bigIncrements('id');
             $table->bigInteger('user_id');
             $table->bigInteger('post_id');
-            $table->bigInteger('parent_id')->nullable()->change();
+            $table->bigInteger('parent_id')->nullable();
             $table->text('content');
             $table->timestamps();
             $table->softDeletes();
