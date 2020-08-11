@@ -1046,8 +1046,6 @@ a.navbar-brand:hover {
   justify-content: center;
   align-items: center;
   text-align: center;
-  background: linear-gradient( rgba(34,34,34,0.78), rgba(34,34,34,0.78)),
-  url('assets/img/posts/2.gif') no-repeat;
   background-size: cover;
   background-position: center center;
   -webkit-background-size: cover;
@@ -2449,4 +2447,8 @@ a.navbar-brand:hover {
 	  height: 130vh;
 	  width: 100%;
 	}
+}
+.store-comment {
+    float: right;
+    margin: 5px 0;
 }
