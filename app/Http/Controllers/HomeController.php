@@ -2,18 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\UserService;
+use App\User;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
+    protected $userService;
+
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(UserService $userService)
     {
         $this->middleware('auth');
+        $this->userService = $userService;
     }
 
     /**
@@ -23,6 +28,22 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $users = User::where('id', '!=', auth()->user()->id)->get();
+
+        return view('home', compact('users'));
+    }
+
+    /**
+     * Follow the user
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function followUserRequest(Request $request)
+    {
+        $user = User::find($request->user_id);
+        $response = auth()->user()->toggleFollow($user);
+
+
+        return response()->json(['success'=>$response]);
     }
 }
