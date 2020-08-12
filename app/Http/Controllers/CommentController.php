@@ -37,7 +37,8 @@ class CommentController extends Controller
         if ($comment) {
             return response()->json([
                 'status' => true,
-                'comment' => view('block.comment', compact('comment', 'post', 'postId'))
+                'comment' => view('block.comment-list', compact('comment', 'post', 'postId')),
+                'count_comments' => $post->parentComments()->count(),
             ]);
         }
 

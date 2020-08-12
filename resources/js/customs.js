@@ -73,7 +73,7 @@ $(document).ready(function() {
 
                 success: function (result) {
                     if (result.status) {
-                        _this.parent().parent().find('.comments-list').append(result.comment);
+                        _this.parent().find('.comments-list').append(result.comment);
                         $('.comment-content').val('');
                     } else {
                         errorMessage();

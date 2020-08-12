@@ -172,16 +172,16 @@
                                                         {{--<a href="" class="kafe kafe-btn-mint-small"><i class="fa fa-check-square"></i> Following</a>--}}
                                                         <span>{{ $post->title }}</span>
                                                     </div>
+                                                    @php
+                                                        $lastParentComment = $post->parentComments()->latest()->first();
+                                                    @endphp
 
-                                                    <ul class="img-comment-list comment-list">
-                                                        @include('block.comment')
+                                                    <ul class="comments-list post-{{ $post->id }} img-comment-list">
+                                                        @include('block.comment-list')
                                                     </ul>
+
                                                     <div class="modal-meta-bottom">
                                                         <ul>
-                                                            <li>
-                                                                <a class="modal-like" href="#"><i class="fa fa-heart"></i></a><span class="modal-one"> 786,286</span> |
-                                                                <a class="modal-comment" href="#"><i class="fa fa-comments"></i></a><span> 786,286</span>
-                                                            </li>
                                                             <li>
                                                                 <form class="display-none post-{{ $post->id }}">
                                                                     <span class="thumb-xs">
@@ -238,29 +238,11 @@
                         </div>
                     </div>
                     <div class="trending-box">
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <a href="#"><img src="assets/img/posts/17.jpg" class="img-responsive" alt="Image"/></a>
-                            </div>
-                            <div class="col-lg-6">
-                                <a href="#"><img src="assets/img/posts/12.jpg" class="img-responsive" alt="Image"/></a>
-                            </div>
+                        <div class="col-lg-6">
+                            <a href="#"><img src="assets/img/posts/17.jpg" class="img-responsive" alt="Image"/></a>
                         </div>
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <a href="#"><img src="assets/img/posts/21.gif" class="img-responsive" alt="Image"/></a>
-                            </div>
-                            <div class="col-lg-6">
-                                <a href="#"><img src="assets/img/posts/23.gif" class="img-responsive" alt="Image"/></a>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-lg-6">
-                                <a href="#"><img src="assets/img/posts/11.jpg" class="img-responsive" alt="Image"/></a>
-                            </div>
-                            <div class="col-lg-6">
-                                <a href="#"><img src="assets/img/posts/20.jpg" class="img-responsive" alt="Image"/></a>
-                            </div>
+                        <div class="col-lg-6">
+                            <a href="#"><img src="assets/img/posts/12.jpg" class="img-responsive" alt="Image"/></a>
                         </div>
                     </div>
                 </div>
