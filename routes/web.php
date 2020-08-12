@@ -23,5 +23,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/{username}/update-avatar', 'ProfileController@updateAvatar')->name('user.updateAvatar');
     Route::post('follow', 'HomeController@followUserRequest')->name('user.follow');
     Route::resource('comments', 'CommentController');
+    Route::post('like', 'PostController@likePost')->name('likePost');
 });
 

@@ -138,15 +138,20 @@
                                     @endforeach
                                 </a>
                             </div>
-                            <div class="cardbox-base">
-                                <ul>
-                                    <li><a href="#"><img src="assets/img/users/1.jpg" class="img-responsive img-circle" alt="User"></a></li>
-                                </ul>
-                            </div>
                             <div class="cardbox-like">
                                 <ul>
-                                    <li><a href="#"><i class="fa fa-heart"></i></a><span> 786,286</span></li>
-                                    <li><a href="#" title="" class="com"><i class="fa fa-comments"></i></a> <span class="span-last"> 126,400</span></li>
+                                    <li>
+                                        <a>
+                                            <i class="fa fa-thumbs-up likePost" aria-hidden="true" data-like="{{ $post->id }}"></i>
+                                        </a>
+                                        <span> {{ $post->likers()->get()->count() }}</span>
+                                    </li>
+                                    <li>
+                                        <a title="" class="com">
+                                            <i class="fa fa-comments"></i>
+                                        </a>
+                                        <span class="span-last"> {{ $post->allComments()->get()->count() }}</span>
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -249,4 +254,25 @@
             </div>
         </div>
     </section>
+@endsection
+@section('script')
+    <script type="text/javascript">
+        $(document).ready(function(){
+            var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+            $(".likePost").click(function(){
+                $.ajax({
+                    url: '{{route('likePost')}}',
+                    type: 'POST',
+                    data: {
+                        _token: CSRF_TOKEN,
+                        id: $(this).data("like"),
+                    },
+                    dataType: 'JSON',
+                    success: function() {
+                        location.reload();
+                    }
+                });
+            });
+        });
+    </script>
 @endsection

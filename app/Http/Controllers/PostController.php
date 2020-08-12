@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PostRequest;
+use App\Models\Post;
 use Illuminate\Http\Request;
 use App\Services\PostService;
 
@@ -102,5 +103,16 @@ class PostController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * Like post
+     */
+    public function likePost(Request $request)
+    {
+        $post = Post::find($request->id);
+        $response = auth()->user()->toggleLike($post);
+
+        return response()->json(['success' => $response]);
     }
 }
