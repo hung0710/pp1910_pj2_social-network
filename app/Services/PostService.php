@@ -72,4 +72,27 @@ class PostService
 
         return Post::with('user')->whereIn('user_id', $userIds)->OrderBy('created_at', 'desc')->get();
     }
+
+    /**
+     * Get Image post
+     */
+    public function getImage($user, $photoNumber)
+    {
+        $postImages = $user->posts()->whereNotNull('image')->OrderBy('created_at', 'desc')->pluck('image');
+        $imageArray = [];
+
+        foreach ($postImages as $image)
+        {
+            foreach (json_decode($image) as $postImage) {
+                if (count($imageArray) == $photoNumber) {
+
+                    return $imageArray;
+                }
+
+                $imageArray[] = $postImage;
+            }
+        }
+
+        return $imageArray;
+    }
 }

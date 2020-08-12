@@ -28,9 +28,11 @@ class ProfileController extends Controller
      */
     public function showProfile(Request $request, $username)
     {
-        $user = User::where('username', $username)->firstOrFail();
+        $user = User::with('followers')->where('username', $username)->firstOrFail();
+        $posts = $this->postService->getListPost($user, false);
+        $postImages = $this->postService->getImage($user, config('user.last_photo'));
 
-        return view('profile.index', compact('user'));
+        return view('profile.index', compact('user', 'posts', 'postImages'));
     }
 
     public function updateAvatar(Request $request)
