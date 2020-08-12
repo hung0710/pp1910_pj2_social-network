@@ -51,9 +51,9 @@
                                 </div>
                             </li>
                             <li>
-                                <small class="text-muted"><a href="#">320 Posts <em class="fa fa-angle-right pull-right"></em></a> </small><br/>
-                                <small class="text-muted"><a href="#">2456 Followers <em class="fa fa-angle-right pull-right"></em></a> </small><br/>
-                                <small class="text-muted"><a href="#">456 Following <em class="fa fa-angle-right pull-right"></em></a> </small>
+                                <small class="text-muted"><a href="#">{{ $user->posts()->get()->count() }} Posts </a> </small><br/>
+                                <small class="text-muted"><a href="#">{{ $user->followers()->get()->count() }} Followers </a> </small><br/>
+                                <small class="text-muted"><a href="#">{{ $user->followings()->get()->count() }} Following </a> </small>
                                 <hr>
                                 <small class="text-muted">Birthday: </small>
                                 <p>{{ auth()->user()->birthday }}</p>
@@ -65,68 +65,80 @@
                         </ul>
                     </aside>
                 </div>
+
                 <div class="col-lg-6">
-                    <div class="col-lg-6">
-                        <a href="#myModal" data-toggle="modal">
-                            <div class="explorebox" >
-                                <img class="img-profile" src="assets/img/posts/6.jpg" alt="">
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-lg-3">
-                    <div class="suggestion-box full-width">
-                        <div class="suggestions-list">
-                            <div class="suggestion-body">
-                                <img class="img-responsive img-circle" src="assets/img/users/1.jpg" alt="">
-                                <div class="name-box">
-                                    <h4>Vanessa Wells</h4>
-                                    <span>@vannessa</span>
+                    @foreach($posts as $post)
+                        @php
+                            $images = json_decode($post->image);
+                        @endphp
+                        <div class="col-lg-6">
+                            <a href="#" data-toggle="modal" data-target="#{{ $post->id }}">
+                                <div class="explorebox" >
+                                    @foreach($images as $key => $postImage)
+                                        <img class="img-profile" src="{{ asset('storage/images/posts/' . $postImage) }}" alt="">
+                                    @endforeach
                                 </div>
-                                <span><i class="fa fa-plus"></i></span>
-                            </div>
-                            <div class="suggestion-body">
-                                <img class="img-responsive img-circle" src="assets/img/users/2.jpg" alt="">
-                                <div class="name-box">
-                                    <h4>Anthony McCartney</h4>
-                                    <span>@antony</span>
+                            </a>
+                        </div>
+                        <div id="{{ $post->id }}" class="modal fade">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-md-8 modal-image">
+                                                @foreach ($images as $key => $postImage)
+                                                    <img class="img-responsive" src="{{ asset('storage/images/posts/' . $postImage) }}" alt="Image">
+                                                @endforeach
+                                            </div>
+                                            <div class="col-md-4 modal-meta">
+                                                <div class="modal-meta-top">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                                        <span aria-hidden="true">×</span><span class="sr-only">Close</span>
+                                                    </button>
+                                                    <div class="img-poster clearfix">
+                                                        <a href="">
+                                                            <img class="img-responsive img-circle" src="{{ getAvatar($post->user->avatar) }}" alt="{{ $post->user->name }}"/>
+                                                        </a>
+                                                        <strong>
+                                                            <a href="{{ route('user.profile', $post->user->username) }}">{{ $post->user->name }}</a>
+                                                        </strong>
+                                                        <span>{{ getCreatedFromTime($post) }}</span><br/>
+                                                    </div>
+
+                                                    @php
+                                                        $lastParentComment = $post->parentComments()->latest()->first();
+                                                    @endphp
+
+                                                    <ul class="img-comment-list">
+                                                        @include('block.comment-list')
+                                                    </ul>
+                                                    <div class="modal-meta-bottom">
+                                                        <ul>
+                                                            <li><a class="modal-like"><i class="fa fa-heart"></i></a><span class="modal-one"> {{ $post->likers()->get()->count() }}</span> |
+                                                                <a class="modal-comment" href="#"><i class="fa fa-comments"></i></a><span> {{ $post->allComments()->get()->count() }}</span> </li>
+                                                            <li>
+                                                                <form class="display-none post-{{ $post->id }}">
+                                                                    <span class="thumb-xs">
+                                                                        <img class="img-responsive img-circle" src="{{ getAvatar(auth()->user()->avatar) }}" alt="{{ auth()->user()->name }}">
+                                                                    </span>
+                                                                    <div class="comment-body">
+                                                                        <input class="form-control input-sm comment-content" type="text" placeholder="Write your comment...">
+                                                                        <button class="btn btn-md-2 btn-primary store-comment" data-post_id="{{ $post->id }}">{{ __('Comment') }}</button>
+                                                                    </div>
+                                                                </form>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <span><i class="fa fa-plus"></i></span>
-                            </div>
-                            <div class="suggestion-body">
-                                <img class="img-responsive img-circle" src="assets/img/users/3.jpg" alt="">
-                                <div class="name-box">
-                                    <h4>Anna Morgan</h4>
-                                    <span>@anna</span>
-                                </div>
-                                <span><i class="fa fa-plus"></i></span>
-                            </div>
-                            <div class="suggestion-body">
-                                <img class="img-responsive img-circle" src="assets/img/users/4.jpg" alt="">
-                                <div class="name-box">
-                                    <h4>Sean Coleman</h4>
-                                    <span>@sean</span>
-                                </div>
-                                <span><i class="fa fa-plus"></i></span>
-                            </div>
-                            <div class="suggestion-body">
-                                <img class="img-responsive img-circle" src="assets/img/users/5.jpg" alt="">
-                                <div class="name-box">
-                                    <h4>Grace Karen</h4>
-                                    <span>@grace</span>
-                                </div>
-                                <span><i class="fa fa-plus"></i></span>
-                            </div>
-                            <div class="suggestion-body">
-                                <img class="img-responsive img-circle" src="assets/img/users/6.jpg" alt="">
-                                <div class="name-box">
-                                    <h4>Clifford Graham</h4>
-                                    <span>@clifford</span>
-                                </div>
-                                <span><i class="fa fa-plus"></i></span>
                             </div>
                         </div>
-                    </div>
+                    @endforeach
+                </div>
+                <div class="col-lg-3">
                     <div class="trending-box">
                         <div class="row">
                             <div class="col-lg-12">
@@ -135,12 +147,15 @@
                         </div>
                     </div>
                     <div class="trending-box">
-                        <div class="col-lg-6">
-                            <a href="#"><img src="assets/img/posts/17.jpg" class="img-responsive" alt="Image"/></a>
-                        </div>
-                        <div class="col-lg-6">
-                            <a href="#"><img src="assets/img/posts/12.jpg" class="img-responsive" alt="Image"/></a>
-                        </div>
+                        @if($postImages)
+                            @foreach($postImages as $image)
+                                <div class="col-lg-6">
+                                    <a href="{{ asset('storage/images/posts/' . $image) }}"><img src="{{ asset('storage/images/posts/' . $image) }}" class="img-responsive" alt="Image"/></a>
+                                </div>
+                            @endforeach
+                        @else
+                        {{ __('No Photo') }}
+                        @endif
                     </div>
                 </div>
             </div>
@@ -174,56 +189,6 @@
         </div>
     </div>
 
-    <div id="myModal" class="modal fade">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-8 modal-image">
-                            <img class="img-responsive" src="assets/img/posts/9.jpg" alt="Image"/>
-                        </div>
-                        <div class="col-md-4 modal-meta">
-                            <div class="modal-meta-top">
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                                    <span aria-hidden="true">×</span><span class="sr-only">Close</span>
-                                </button>
-                                <div class="img-poster clearfix">
-                                    <a href=""><img class="img-responsive img-circle" src="assets/img/users/18.jpg" alt="Image"/></a>
-                                    <strong><a href="">Benjamin</a></strong>
-                                    <span>12 minutes ago</span><br/>
-                                    <a href="" class="kafe kafe-btn-mint-small"><i class="fa fa-check-square"></i> Following</a>
-                                </div>
-
-                                <ul class="img-comment-list">
-                                    <li>
-                                        <div class="comment-img">
-                                            <img src="assets/img/users/17.jpeg" class="img-responsive img-circle" alt="Image"/>
-                                        </div>
-                                        <div class="comment-text">
-                                            <strong><a href="">Anthony McCartney</a></strong>
-                                            <p>Hello this is a test comment.</p> <span class="date sub-text">on December 5th, 2016</span>
-                                        </div>
-                                    </li>
-                                </ul>
-                                <div class="modal-meta-bottom">
-                                    <ul>
-                                        <li><a class="modal-like" href="#"><i class="fa fa-heart"></i></a><span class="modal-one"> 786,286</span> |
-                                            <a class="modal-comment" href="#"><i class="fa fa-comments"></i></a><span> 786,286</span> </li>
-                                        <li>
-			                                <span class="thumb-xs"><img class="img-responsive img-circle" src="assets/img/users/13.jpeg" alt="Image"></span>
-                                            <div class="comment-body">
-                                                <input class="form-control input-sm" type="text" placeholder="Write your comment...">
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 @endsection
 @section('script')
     <script>
