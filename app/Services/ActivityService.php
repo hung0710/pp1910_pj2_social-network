@@ -38,4 +38,26 @@ class ActivityService
 
         return true;
     }
+
+    /**
+     * Delete Activity
+     *
+     * @param int $postId
+     * @return boolean
+     *
+     */
+    public function deleteActivity($postId)
+    {
+        $activity = Activity::where('post_id', $postId);
+
+        try {
+            $activity->delete();
+        } catch (\Throwable $throwable) {
+            Log::error($throwable);
+
+            return false;
+        }
+
+        return true;
+    }
 }
