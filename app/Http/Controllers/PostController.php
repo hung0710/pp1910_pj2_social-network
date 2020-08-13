@@ -102,7 +102,13 @@ class PostController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $deletePost = $this->postService->deletePost($id);
+
+        if ($deletePost) {
+            return redirect()->back()->with('success', __('Delete post successfully!'));
+        }
+
+        return redirect()->back()->with('error', __('Something went wrong!'));
     }
 
     /**

@@ -9,7 +9,7 @@ use App\Services\ActivityService;
 
 class PostService
 {
-    protected $post;
+    protected $activityService;
 
     public function __construct(ActivityService $activityService)
     {
@@ -94,5 +94,34 @@ class PostService
         }
 
         return $imageArray;
+    }
+
+    /**
+     * Delete post
+     *
+     * @param int $id
+     * @return boolean
+     *
+     */
+    public function deletePost($id)
+    {
+        $post = Post::findOrFail($id);
+
+        if ($post->user_id != auth()->user()->id) {
+
+            return false;
+        }
+
+        $this->activityService->deleteActivity($id);
+
+        try {
+            $post->delete();
+        } catch (\Throwable $throwable) {
+            Log::error($throwable);
+
+            return false;
+        }
+
+        return true;
     }
 }

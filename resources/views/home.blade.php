@@ -113,10 +113,13 @@
                                         <em class="fa fa-ellipsis-h"></em>
                                     </button>
                                     <div class="dropdown-menu dropdown-scale dropdown-menu-right drop-right" role="menu">
-                                        <a class="dropdown-item" href="#">{{ __('Hide post') }}</a>
-                                        <a class="dropdown-item" href="#">{{ __('Stop following') }}</a>
-                                        <a class="dropdown-item" href="#">{{ __('Report') }}</a>
+                                        @if(auth()->id() == $post->user->id)
+                                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#confirmDeleteModal{{ $post->id }}">{{ __('Delete post') }}</a>
+                                        @else
+                                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#unfollowUser{{  $user->id }}">{{ __('Stop following') }}</a>
+                                        @endif
                                     </div>
+                                    @include('block.modals.delete_post')
                                 </div>
                                 <div class="media m-0">
                                     <div class="d-flex mr-3">
