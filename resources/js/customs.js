@@ -119,5 +119,35 @@ $(document).ready(function() {
             errorImages();
         }
     });
+    var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+    $(".likePost").click(function(){
+        $.ajax({
+            url: 'like',
+            type: 'POST',
+            data: {
+                _token: CSRF_TOKEN,
+                id: $(this).data("like"),
+            },
+            dataType: 'JSON',
+            success: function() {
+                location.reload();
+            }
+        });
+    });
+    var myIndex = 0;
+    carousel();
 
+    function carousel() {
+        var i;
+        var x = document.getElementsByClassName("mySlides1");
+        for (i = 0; i < x.length; i++) {
+            x[i].style.display = "none";
+        }
+        myIndex++;
+        if (myIndex > x.length) {
+            myIndex = 1
+        }
+        x[myIndex - 1].style.display = "block";
+        setTimeout(carousel, 3000);
+    }
 });

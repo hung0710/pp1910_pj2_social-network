@@ -815,7 +815,7 @@ a.navbar-brand:hover {
   height: 450px !important;
 }
 .modal-image img{
-  width: 600px !important;
+  /*width: 600px !important;*/
   height: 540px !important;
 }
 
@@ -948,7 +948,7 @@ a.navbar-brand:hover {
 .modal-meta-bottom .comment-body input{
   width: 200px !important;
 }
-
+.mySlides {display:none;}
 
 /* ==========================================================================
    Media Queries for Modal
