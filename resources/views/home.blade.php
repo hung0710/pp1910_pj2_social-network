@@ -5,7 +5,7 @@
     <section class="nav-sec">
         <div class="d-flex justify-content-between">
             <div class="p-2 nav-icon-lg mint-green">
-                <a class="nav-icon" href="#"><em class="fa fa-home"></em>
+                <a class="nav-icon" href="{{ route('home') }}"><em class="fa fa-home"></em>
                     <span>{{ __('Home') }}</span>
                 </a>
             </div>
@@ -127,7 +127,7 @@
                                     </div>
                                     <div class="media-body">
                                         <a href="{{ route('user.profile', $post->user->username) }}"><p class="m-0">{{ $post->user->name }}</p></a>
-                                        <small><span>{{ getCreatedFromTime($post) }}</span></small>
+                                        <small><a href="{{ route('posts.show', $post->id) }}"><span>{{ getCreatedFromTime($post) }}</span></a></small>
                                     </div>
                                 </div>
                             </div>
@@ -135,11 +135,23 @@
                                 $images = json_decode($post->image);
                             @endphp
                             <div class="cardbox-item">
-                                <a href="#" data-toggle="modal" data-target="#{{ $post->id }}">
-                                    @foreach ($images as $key => $postImage)
-                                        <img class="img-responsive img-post" src="{{ asset('storage/images/posts/' . $postImage) }}" alt="Image">
-                                    @endforeach
-                                </a>
+                                @if(count($images) == 1)
+                                    <a href="#" data-toggle="modal" data-target="#{{ $post->id }}">
+                                        @foreach ($images as $key => $postImage)
+                                            <img class="img-responsive img-post" src="{{ asset('storage/images/posts/' . $postImage) }}" alt="Image">
+                                        @endforeach
+                                    </a>
+                                @elseif(count($images) > 1)
+                                    <div class="w3-content w3-display-container">
+                                        <a href="#" data-toggle="modal" data-target="#{{ $post->id }}">
+                                            @foreach ($images as $key => $postImage)
+                                                <img class="mySlides" src="{{ asset('storage/images/posts/' . $postImage) }}" alt="Image" width="100%">
+                                            @endforeach
+                                        </a>
+                                        <button class="w3-button w3-black w3-display-left" onclick="plusDivs(-1)">&#10094;</button>
+                                        <button class="w3-button w3-black w3-display-right" onclick="plusDivs(1)">&#10095;</button>
+                                    </div>
+                                @endif
                             </div>
                             <div class="cardbox-like">
                                 <ul>
@@ -159,56 +171,7 @@
                             </div>
                         </div>
                         <div id="{{ $post->id }}" class="modal fade">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-body">
-                                        <div class="row">
-                                            <div class="col-md-8 modal-image">
-                                                @foreach ($images as $key => $postImage)
-                                                    <img class="img-responsive" src="{{ asset('storage/images/posts/' . $postImage) }}" alt="Image">
-                                                @endforeach
-                                            </div>
-                                            <div class="col-md-4 modal-meta">
-                                                <div class="modal-meta-top">
-                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                                                        <span aria-hidden="true">×</span><span class="sr-only">Close</span>
-                                                    </button>
-                                                    <div class="img-poster clearfix">
-                                                        <a href=""><img class="img-responsive img-circle" src="{{ getAvatar($post->user->avatar) }}" alt="Image"/></a>
-                                                        <strong><a href="{{ route('user.profile', $post->user->username) }}">{{ $post->user->name }}</a></strong>
-                                                        <span>{{ getCreatedFromTime($post) }}</span><br/>
-                                                        {{--<a href="" class="kafe kafe-btn-mint-small"><i class="fa fa-check-square"></i> Following</a>--}}
-                                                        <span>{{ $post->title }}</span>
-                                                    </div>
-                                                    @php
-                                                        $lastParentComment = $post->parentComments()->latest()->first();
-                                                    @endphp
-
-                                                    <ul class="comments-list post-{{ $post->id }} img-comment-list">
-                                                        @include('block.comment-list')
-                                                    </ul>
-
-                                                    <div class="modal-meta-bottom">
-                                                        <ul>
-                                                            <li>
-                                                                <form class="display-none post-{{ $post->id }}">
-                                                                    <span class="thumb-xs">
-                                                                        <img class="img-responsive img-circle" src="{{ getAvatar(auth()->user()->avatar) }}" alt="{{ auth()->user()->name }}">
-                                                                    </span>
-                                                                    <div class="comment-body">
-                                                                        <input class="form-control input-sm comment-content" type="text" placeholder="Write your comment...">
-                                                                        <button class="btn btn-md-2 btn-primary store-comment" data-post_id="{{ $post->id }}">{{ __('Comment') }}</button>
-                                                                    </div>
-                                                                </form>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            @include('block.modals.post')
                         </div>
                     @endforeach
                 </div>
@@ -260,22 +223,22 @@
 @endsection
 @section('script')
     <script type="text/javascript">
-        $(document).ready(function(){
-            var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
-            $(".likePost").click(function(){
-                $.ajax({
-                    url: '{{route('likePost')}}',
-                    type: 'POST',
-                    data: {
-                        _token: CSRF_TOKEN,
-                        id: $(this).data("like"),
-                    },
-                    dataType: 'JSON',
-                    success: function() {
-                        location.reload();
-                    }
-                });
-            });
-        });
+        var slideIndex = 1;
+        showDivs(slideIndex);
+
+        function plusDivs(n) {
+            showDivs(slideIndex += n);
+        }
+
+        function showDivs(n) {
+            var i;
+            var x = document.getElementsByClassName("mySlides");
+            if (n > x.length) {slideIndex = 1}
+            if (n < 1) {slideIndex = x.length}
+            for (i = 0; i < x.length; i++) {
+                x[i].style.display = "none";
+            }
+            x[slideIndex-1].style.display = "block";
+        }
     </script>
 @endsection

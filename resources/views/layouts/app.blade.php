@@ -9,6 +9,7 @@
     
     <link rel="icon" href="{{ asset('assets/img/logo.jpg') }}">
     <link type="text/css" href="{{ asset('assets/css/demos/photo.css') }}" rel="stylesheet" />
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 </head>
 <body>
      @include('layouts.header')
