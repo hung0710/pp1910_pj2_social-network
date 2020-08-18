@@ -41,7 +41,7 @@
                                 <div class="user-info">
                                     <div class="image">
                                         <a class="avatar_profile">
-                                            <img src="{{ getAvatar($user->avatar) }}" class="img-responsive img-circle" alt="User" onerror="this.src='{{ asset('assets/img/avatar.png') }}'">
+                                            <img src="{{ getAvatar($user->avatar) }}" class="img-responsive img-circle" alt="User">
                                             <a href="#" type="button" data-toggle="modal" data-target="#update_avatar" class="avatar_btn"><em class="fa fa-edit pull-right"></em></a>
                                         </a>
                                     </div>
@@ -71,15 +71,15 @@
                         @php
                             $images = json_decode($post->image);
                         @endphp
-                        <div class="col-lg-6">
-                            <a href="#" data-toggle="modal" data-target="#{{ $post->id }}">
-                                <div class="explorebox" >
-                                    @foreach($images as $key => $postImage)
+                        @foreach($images as $key => $postImage)
+                            <div class="col-lg-6">
+                                <a href="#" data-toggle="modal" data-target="#{{ $post->id }}">
+                                    <div class="explorebox" >
                                         <img class="img-profile" src="{{ asset('storage/images/posts/' . $postImage) }}" alt="">
-                                    @endforeach
-                                </div>
-                            </a>
-                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        @endforeach
                         <div id="{{ $post->id }}" class="modal fade">
                             @include('block.modals.post')
                         </div>

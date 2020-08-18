@@ -32,6 +32,11 @@ class ProfileController extends Controller
         $posts = $this->postService->getListPost($user, false);
         $postImages = $this->postService->getImage($user, config('user.last_photo'));
 
+        if ($user->username != auth()->user()->username) {
+
+            return view('profile.profile_user', compact('user', 'posts', 'postImages'));
+        }
+
         return view('profile.index', compact('user', 'posts', 'postImages'));
     }
 
