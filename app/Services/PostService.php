@@ -97,6 +97,33 @@ class PostService
     }
 
     /**
+     * Edit post
+     *
+     * @param int $id
+     * @param array $data['user_id', 'title', 'type']
+     * @return boolean
+     */
+    public function updatePost($id, $data)
+    {
+        $post = Post::findOrFail($id);
+
+        if ($post->user_id != auth()->user()->id) {
+
+            return false;
+        }
+
+        try {
+            $post->update($data);
+        } catch (\Throwable $throwable) {
+            Log::error($throwable);
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Delete post
      *
      * @param int $id

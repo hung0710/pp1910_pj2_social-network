@@ -74,17 +74,6 @@ class PostController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -93,7 +82,20 @@ class PostController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $data = $this->postService->getPostData($request);
+        $data['user_id'] = auth()->user()->id;
+
+        if (isset($data['image'])) {
+            $data['image'] = $this->postService->postImage($data['image']);
+        }
+
+        $updatePost = $this->postService->updatePost($id, $data);
+
+        if ($updatePost) {
+            return redirect()->back()->with('success', 'Update post successfully!');
+        }
+
+        return redirect()->back()->with('error', 'Something wen\'t wrong!');
     }
 
     /**
