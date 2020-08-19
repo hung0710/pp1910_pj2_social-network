@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Overtrue\LaravelLike\Traits\Likeable;
 
 class Post extends Model
 {
-    use Likeable;
+    use SoftDeletes, Likeable;
 
     protected $fillable = [
         'user_id',

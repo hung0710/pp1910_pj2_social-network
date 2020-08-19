@@ -20,10 +20,10 @@
                 <ul class="nav navbar-nav">
                     <li>
                         <div class="search-dashboard">
-                            <form>
-                                <input placeholder="Search here" type="text">
-                                <button type="submit"><i class="fa fa-search"></i></button>
-                            </form>
+                            <input class="form-control search-people-input dropdown-toggle" name="name" placeholder="@lang('Search peoples...')" type="text" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" autocomplete="new-password">
+
+                            <div class="selectize-dropdown form-control dropdown-menu search-people-result" aria-labelledby="searchPeople">
+                            </div>
                         </div>
                     </li>
 

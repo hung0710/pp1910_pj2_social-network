@@ -10,9 +10,9 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-Auth::routes();
+Auth::routes(['verify' => true]);
 
-Route::group(['middleware' => ['auth']], function () {
+Route::group(['middleware' => ['auth','verified']], function () {
     Route::get('/', 'HomeController@index')->name('home');
     Route::resource('posts', 'PostController');
     Route::get('/settings', 'UserController@getProfile')->name('user.getProfile');
@@ -24,5 +24,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('follow', 'HomeController@followUserRequest')->name('user.follow');
     Route::resource('comments', 'CommentController');
     Route::post('like', 'PostController@likePost')->name('likePost');
+    Route::get('/search-people', 'UserController@getSearchPeopleList')->name('search.people');
 });
 

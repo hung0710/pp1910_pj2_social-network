@@ -53,4 +53,11 @@ class UserService
 
         return true;
     }
+
+    public function getSearchPeopleList($inputString)
+    {
+        return User::where('id', '!=', auth()->id())
+            ->where('name' , 'LIKE' , '%' . $inputString . '%')
+            ->paginate(config('user.search'));
+    }
 }
