@@ -31,6 +31,7 @@
                                 <a href="{{ route('user.profile', $post->user->username) }}">{{ $post->user->name }}</a>
                             </strong>
                             <span>{{ getCreatedFromTime($post) }}</span><br/>
+                            <span>{{ $post->title }}</span>
                         </div>
 
                         @php
